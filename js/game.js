@@ -1,36 +1,31 @@
+alert("The objective of this game is to drag words to their corresponding places in the diagram.");
 var w=window.innerWidth;
 var h=window.innerHeight;
 var o=74;
-if(w>600){w=600;}
+if(w>790){w=790;}
 var game = new Phaser.Game(w,h, Phaser.AUTO, 'gameDiv');
 
-function calcCrow(lat1, lon1, lat2, lon2) 
-    {
-      var R = 6371; // km
-      var dLat = toRad(lat2-lat1);
-      var dLon = toRad(lon2-lon1);
-      var lat1 = toRad(lat1);
-      var lat2 = toRad(lat2);
+function distance(x1,y1,x2,y2){
+  x1=parseInt(x1);
+  x2=parseInt(x2);
+  y2=parseInt(y2);
+  y1=parseInt(y1);
+  console.log(x1,y1,x2,y2);
+  d = Math.sqrt( (Math.pow(x1-x2,2)+Math.pow(y1-y2,2))  );
+  d=parseInt(d);
+  console.log(d);
+  return d;
+}
 
-      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-      var d = R * c;
-      return d;
-    }
 
-function toRad(Value) 
-    {
-        return Value * Math.PI / 180;
-    }
 var data_string ="\
-label 1,206,182;\
-label 2,98,263;\
-label 3,45,343;\
-label 4,100,520;\
-label 5,405,522;\
-label 6,463,502;\
-label 7,488,442\
+plasma\ncell\nmembrane,231,182;\
+endoplasmic\nreticulum,231,182;\
+nucleus,98,263;\
+ribosome,45,343;\
+lysosome,100,520;\
+mitochondria,405,522;\
+golgi,463,502;\
 ";
 var random_item;
 var data_arr=[];
@@ -58,23 +53,15 @@ var mainState = {
         var x=10,y=10;
         for(i=0;i<data_arr.length-1;i++){
             options.add(this.game.add.text(x,y,data_arr[i][0], { font: "15px Arial", fill: "#ffffff" }));
-            x+=100;
+            x+=130;
         }
         function itemDragStop(item) {
               var temp = item.name.split(';');
-              console.log(temp);
-              if(distance(game.input.mousePointer.x,game.input.mousePointer.y,temp[3],temp[4])){
-                if(random_item[1] == temp[0]){
-                    console.log("correct");
-                    item.x=w/2;
-                    item.y=70;
-                    item.scale.x=2.5;
-                    item.scale.y=3.5;
-                    //alert("Well Done !!");
-                    //game.state.start('main');
-                    return;
-                }
-
+              console.log("temp "+temp);
+              console.log()
+              if(distance(game.input.x,game.input.y,temp[3],temp[4]) < 50 ){
+                console.log('yo');
+                return;
               }
               var temp = item.name.split(';');
               //console.log("moving to " + temp[1]+","+temp[2]);
